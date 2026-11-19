@@ -689,7 +689,9 @@ class LotteryApp {
     if (data.session) this.nubeArrancar(); else { this.nubeEstado('err', 'Sesión caducada: vuelve a escribir la contraseña.'); this.show('modal-nube'); }
   }
   async nubeConectar() {
-    const v = id => $(id).value.trim(), url = v('nube-url'), key = v('nube-key'), email = v('nube-email'), pass = $('nube-pass').value;
+    const v = id => $(id).value.trim(), key = v('nube-key'), email = v('nube-email'), pass = $('nube-pass').value;
+    let url = v('nube-url');
+    try { url = new URL(url).origin; $('nube-url').value = url; } catch (e) { return this.showMsg('URL no válida', 'Pega la URL del proyecto, con la forma https://xxxx.supabase.co', 'error'); }
     if (!url || !key || !email || !pass) return this.showMsg('Faltan datos', 'Rellena URL, clave, email y contraseña.', 'error');
     if (!window.supabase) return this.showMsg('Sin conexión', 'No se pudo cargar la librería de Supabase. Comprueba tu conexión.', 'error');
     localStorage.setItem('lot_nube', JSON.stringify({ url, key, email }));
